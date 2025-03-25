@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quick Share</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background: #0a3871;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .container {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+    }
+    .message {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .message img {
+      max-width: 100%;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+    footer {
+      padding: 10px;
+      background: white;
+      border-top: 1px solid #ccc;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    input[type="text"], input[type="file"], button {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #0a3871;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #062955;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h2>📝 Quick Text & Photo Share</h2>
+  </header>
+
+  <div class="container" id="chat-box">
+    <!-- Messages will appear here -->
+  </div>
+
+  <footer>
+    <input type="text" id="text" placeholder="Type your message...">
+    <input type="file" id="image" accept="image/*">
+    <button onclick="sendMessage()">Send</button>
+  </footer>
+
+  <script>
+    function sendMessage() {
+      const text = document.getElementById("text").value;
+      const fileInput = document.getElementById("image");
+      const chatBox = document.getElementById("chat-box");
+
+      const div = document.createElement("div");
+      div.className = "message";
+
+      if (text.trim()) {
+        const p = document.createElement("p");
+        p.textContent = text;
+        div.appendChild(p);
+      }
+
+      if (fileInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          div.appendChild(img);
+          chatBox.appendChild(div);
+          chatBox.scrollTop = chatBox.scrollHeight;
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+
+      document.getElementById("text").value = "";
+      document.getElementById("image").value = "";
+    }
+  </script>
+
+</body>
+</html>
