@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JIN Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e1bee7, #b2dfdb);
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #4a148c;
+    }
+    .file-list {
+      margin-top: 20px;
+      background: #f1f8e9;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .file-item {
+      background: #e3f2fd;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .file-name {
+      color: #1a237e;
+      font-weight: 500;
+    }
+    .file-actions a {
+      margin-left: 10px;
+      padding: 5px 10px;
+      text-decoration: none;
+      border-radius: 5px;
+      color: white;
+    }
+    .download {
+      background-color: #2196f3;
+    }
+    .preview {
+      background-color: #4caf50;
+    }
+  </style>
+</head>
+<body>
+  <h2>📂 Welcome to JIN Dashboard</h2>
+  <div class="file-list" id="fileList">Loading documents...</div>
+
+  <script>
+    function fetchFiles() {
+      fetch('uploads/')
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const links = Array.from(doc.querySelectorAll('a'));
+          const list = document.getElementById('fileList');
+          list.innerHTML = '';
+          links.forEach(link => {
+            const fileName = link.textContent;
+            if (fileName.match(/\.(txt|jpg|jpeg|png|gif|mp4|avi|pdf)$/i)) {
+              const item = document.createElement('div');
+              item.className = 'file-item';
+              item.innerHTML = `
+                <span class="file-name">${fileName}</span>
+                <div class="file-actions">
+                  <a class="download" href="uploads/${fileName}" download>Download</a>
+                  <a class="preview" href="uploads/${fileName}" target="_blank">Preview</a>
+                </div>
+              `;
+              list.appendChild(item);
+            }
+          });
+        })
+        .catch(err => {
+          document.getElementById('fileList').textContent = 'Failed to load documents.';
+        });
+    }
+
+    window.onload = fetchFiles;
+  </script>
+</body>
+</html>
