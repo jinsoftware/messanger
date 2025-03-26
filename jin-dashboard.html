@@ -57,33 +57,32 @@
   <div class="file-list" id="fileList">Loading documents...</div>
 
   <script>
-    function fetchFiles() {
-      fetch('uploads/')
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          const links = Array.from(doc.querySelectorAll('a'));
-          const list = document.getElementById('fileList');
-          list.innerHTML = '';
-          links.forEach(link => {
-            const fileName = link.textContent;
-            if (fileName.match(/\.(txt|jpg|jpeg|png|gif|mp4|avi|pdf)$/i)) {
-              const item = document.createElement('div');
-              item.className = 'file-item';
-              item.innerHTML = `
-                <span class="file-name">${fileName}</span>
-                <div class="file-actions">
-                  <a class="download" href="uploads/${fileName}" download>Download</a>
-                  <a class="preview" href="uploads/${fileName}" target="_blank">Preview</a>
-                </div>
-              `;
-              list.appendChild(item);
-            }
-          });
-        })
-        .catch(err => {
-          document.getElementById('fileList').textContent = 'Failed to load documents.';
+   function fetchFiles() {
+  fetch('list-files.php')
+    .then(res => res.json())
+    .then(files => {
+      const list = document.getElementById('fileList');
+      list.innerHTML = '';
+      files.forEach(fileName => {
+        if (fileName.match(/\.(txt|jpg|jpeg|png|gif|mp4|avi|pdf)$/i)) {
+          const item = document.createElement('div');
+          item.className = 'file-item';
+          item.innerHTML = `
+            <span class="file-name">${fileName}</span>
+            <div class="file-actions">
+              <a class="download" href="uploads/${fileName}" download>Download</a>
+              <a class="preview" href="uploads/${fileName}" target="_blank">Preview</a>
+            </div>
+          `;
+          list.appendChild(item);
+        }
+      });
+    })
+    .catch(() => {
+      document.getElementById('fileList').textContent = 'Failed to load documents.';
+    });
+}
+
         });
     }
 
