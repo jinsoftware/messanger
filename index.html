@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scan Upload Page</title>
+  <title>Send Files to JIN</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -79,14 +79,14 @@
 </head>
 <body>
   <div class="container">
-    <h2>Scan Codes or Documents</h2>
+    <h2>Send Codes or Documents</h2>
     <form id="scanForm">
       <textarea id="textInput" name="text" placeholder="Enter text (optional)"></textarea>
       <input type="file" id="fileInput" name="files[]" accept="image/*,video/*" multiple />
-      <button type="submit">Scan</button>
+      <button type="submit">Send</button>
     </form>
-    <div id="scanner" class="scanner-box">Scanning...</div>
-    <div id="completeMsg" class="scanner-box complete">Scan Completed</div>
+    <div id="scanner" class="scanner-box">Sending...</div>
+    <div id="completeMsg" class="scanner-box complete">Sent Successfully</div>
     <a class="login-link" href="jin-portal.html">🔐 Login to JIN Portal</a>
   </div>
 
@@ -117,7 +117,7 @@
         setTimeout(() => {
           scanner.style.display = "none";
           completeMsg.style.display = "block";
-        }, 5000); // 5 seconds
+        }, 5000);
       });
     });
   </script>
