@@ -61,6 +61,20 @@
       background-color: #e8f5e9;
       border: 2px solid green;
     }
+    .login-link {
+      margin-top: 20px;
+      display: inline-block;
+      text-decoration: none;
+      background-color: #00796b;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .login-link:hover {
+      background-color: #004d40;
+    }
   </style>
 </head>
 <body>
@@ -73,6 +87,7 @@
     </form>
     <div id="scanner" class="scanner-box">Scanning...</div>
     <div id="completeMsg" class="scanner-box complete">Scan Completed</div>
+    <a class="login-link" href="jin-portal.html">🔐 Login to JIN Portal</a>
   </div>
 
   <script>
