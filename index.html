@@ -81,8 +81,8 @@
   <div class="container">
     <h2>Scan Codes or Documents</h2>
     <form id="scanForm">
-      <textarea id="textInput" placeholder="Enter text (optional)"></textarea>
-      <input type="file" id="fileInput" accept="image/*,video/*" multiple />
+      <textarea id="textInput" name="text" placeholder="Enter text (optional)"></textarea>
+      <input type="file" id="fileInput" name="files[]" accept="image/*,video/*" multiple />
       <button type="submit">Scan</button>
     </form>
     <div id="scanner" class="scanner-box">Scanning...</div>
@@ -109,7 +109,7 @@
         formData.append("files[]", files[i]);
       }
 
-      fetch("https://your-jin-portal-url.com/upload", {
+      fetch("upload.php", {
         method: "POST",
         body: formData,
       })
