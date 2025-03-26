@@ -1,4 +1,3 @@
-<!-- Same file used as dashboard also -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,6 +43,7 @@
       border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
+      margin-top: 10px;
     }
     button:hover {
       background-color: #6a1b9a;
@@ -98,3 +98,59 @@
     <h2>JIN Portal Login</h2>
     <input type="text" id="username" placeholder="Username" />
     <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <div class="dashboard" id="dashboard">
+    <h2>📊 JIN Dashboard</h2>
+    <div class="file-list" id="fileList">Loading documents...</div>
+  </div>
+
+  <script>
+    function login() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+
+      if (user === 'jin' && pass === 'synonym117') {
+        document.getElementById('loginBox').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        fetchFiles();
+      } else {
+        errorMsg.textContent = 'Invalid username or password';
+      }
+    }
+
+    function fetchFiles() {
+      fetch('uploads/')
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const links = Array.from(doc.querySelectorAll('a'));
+          const list = document.getElementById('fileList');
+          list.innerHTML = '';
+          links.forEach(link => {
+            const fileName = link.textContent;
+            if (fileName.match(/\.(txt|jpg|jpeg|png|gif|mp4|avi|pdf)$/i)) {
+              const item = document.createElement('div');
+              item.className = 'file-item';
+              item.innerHTML = `
+                <span class="file-name">${fileName}</span>
+                <div class="file-actions">
+                  <a class="download" href="uploads/${fileName}" download>Download</a>
+                  <a href="uploads/${fileName}" target="_blank">Preview</a>
+                </div>
+              `;
+              list.appendChild(item);
+            }
+          });
+        })
+        .catch(err => {
+          document.getElementById('fileList').textContent = 'Failed to load documents.';
+        });
+    }
+  </script>
+</body>
+</html>
