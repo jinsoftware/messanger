@@ -1,115 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Quick Share</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scan Upload Page</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: #f4f4f4;
-      margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #e1bee7);
       display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
       height: 100vh;
-    }
-    header {
-      background: #0a3871;
-      color: white;
-      padding: 15px;
-      text-align: center;
+      margin: 0;
     }
     .container {
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-    }
-    .message {
-      margin-bottom: 15px;
-      padding: 10px;
       background: white;
-      border-radius: 6px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
     }
-    .message img {
-      max-width: 100%;
-      border-radius: 4px;
-      margin-top: 10px;
+    h2 {
+      color: #4a148c;
+      margin-bottom: 20px;
     }
-    footer {
+    input, textarea, button {
+      width: 100%;
       padding: 10px;
-      background: white;
-      border-top: 1px solid #ccc;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    input[type="text"], input[type="file"], button {
-      padding: 10px;
-      font-size: 16px;
+      margin: 10px 0;
+      border-radius: 8px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      font-size: 16px;
     }
     button {
-      background: #0a3871;
+      background-color: #7b1fa2;
       color: white;
       border: none;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
     button:hover {
-      background: #062955;
+      background-color: #4a148c;
+    }
+    .scanner-box {
+      margin-top: 20px;
+      padding: 20px;
+      border: 2px dashed #007bff;
+      color: #007bff;
+      display: none;
+      border-radius: 10px;
+      background-color: #e3f2fd;
+    }
+    .complete {
+      color: green;
+      font-weight: bold;
+      background-color: #e8f5e9;
+      border: 2px solid green;
     }
   </style>
 </head>
 <body>
-
-  <header>
-    <h2>📝 Quick Text & Photo Share</h2>
-  </header>
-
-  <div class="container" id="chat-box">
-    <!-- Messages will appear here -->
+  <div class="container">
+    <h2>Scan Codes or Documents</h2>
+    <form id="scanForm">
+      <textarea id="textInput" placeholder="Enter text (optional)"></textarea>
+      <input type="file" id="fileInput" accept="image/*,video/*" multiple />
+      <button type="submit">Scan</button>
+    </form>
+    <div id="scanner" class="scanner-box">Scanning...</div>
+    <div id="completeMsg" class="scanner-box complete">Scan Completed</div>
   </div>
 
-  <footer>
-    <input type="text" id="text" placeholder="Type your message...">
-    <input type="file" id="image" accept="image/*">
-    <button onclick="sendMessage()">Send</button>
-  </footer>
-
   <script>
-    function sendMessage() {
-      const text = document.getElementById("text").value;
-      const fileInput = document.getElementById("image");
-      const chatBox = document.getElementById("chat-box");
+    const form = document.getElementById("scanForm");
+    const scanner = document.getElementById("scanner");
+    const completeMsg = document.getElementById("completeMsg");
 
-      const div = document.createElement("div");
-      div.className = "message";
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      scanner.style.display = "block";
+      completeMsg.style.display = "none";
 
-      if (text.trim()) {
-        const p = document.createElement("p");
-        p.textContent = text;
-        div.appendChild(p);
+      const text = document.getElementById("textInput").value;
+      const files = document.getElementById("fileInput").files;
+      const formData = new FormData();
+
+      formData.append("text", text);
+      for (let i = 0; i < files.length; i++) {
+        formData.append("files[]", files[i]);
       }
 
-      if (fileInput.files.length > 0) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const img = document.createElement("img");
-          img.src = e.target.result;
-          div.appendChild(img);
-          chatBox.appendChild(div);
-          chatBox.scrollTop = chatBox.scrollHeight;
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        chatBox.appendChild(div);
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }
-
-      document.getElementById("text").value = "";
-      document.getElementById("image").value = "";
-    }
+      fetch("https://your-jin-portal-url.com/upload", {
+        method: "POST",
+        body: formData,
+      })
+      .then(() => {
+        setTimeout(() => {
+          scanner.style.display = "none";
+          completeMsg.style.display = "block";
+        }, 60000); // 1 minute
+      });
+    });
   </script>
-
 </body>
 </html>
